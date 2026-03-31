@@ -104,3 +104,29 @@ Essa separação é deliberada. No Step 2, quando houver a implementação do Ge
 ```
 
 ---
+
+## Testes
+
+Foram escritos testes de integração para o contexto `App.Telemetry` cobrindo
+as três operações implementadas nesta etapa. Cada teste roda dentro de uma
+transaction isolada via `App.DataCase`, que faz rollback automático ao final
+— garantindo que nenhum teste contamina o estado do próximo.
+
+### `register nodes`
+
+- Criação com params válidos
+- Falha com `machine_identifier` duplicado — valida o unique constraint
+- Falha com campos obrigatórios ausentes — valida o changeset antes de chegar no banco
+
+### `list nodes`
+
+- Retorna lista vazia quando não há nodes cadastrados
+- Retorna todos os nodes existentes
+
+### `get node`
+
+- Retorna o node quando encontrado por `machine_identifier`
+- Retorna `nil` quando não encontrado
+
+O caso de duplicidade é o mais importante desta suite pois prova que a
+constraint está funcionando tanto no changeset quanto no banco.

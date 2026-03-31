@@ -1,7 +1,4 @@
-# test/app/telemetry/telemetry_test.exs
-
 defmodule App.TelemetryTest do
-  # carrega o banco de teste e faz rollback após cada teste
   use App.DataCase
 
   alias App.Telemetry
