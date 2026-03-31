@@ -16,7 +16,7 @@ defmodule App.Telemetry.Ingestion.Server do
   end
 
   def get_node(id) do
-    GenServer.call(:telemetry_server, {:get_node, %{id: id}})
+    GenServer.call(:telemetry_server, {:get_node, id})
   end
 
   def add_metric(metric) do
@@ -37,8 +37,8 @@ defmodule App.Telemetry.Ingestion.Server do
 
   @impl true
   def handle_call(:clear, _from, state) do
-    list = :ets.delete_all_objects(:w_core_telemetry_cache)
-    {:reply, list, state}
+    :ets.delete_all_objects(:w_core_telemetry_cache)
+    {:reply, :ok, state}
   end
 
   @impl true
@@ -48,9 +48,11 @@ defmodule App.Telemetry.Ingestion.Server do
   end
 
   @impl true
-  def handle_call({:get_node, data}, _from, state) do
-    data = :ets.lookup(:w_core_telemetry_cache, data.id)
-    {:reply, data, state}
+  def handle_call({:get_node, id}, _from, state) do
+    case :ets.lookup(:w_core_telemetry_cache, id) do
+      [] -> {:reply, {:error, :not_found}, state}
+      [record] -> {:reply, {:ok, record}, state}
+    end
   end
 
   @impl true

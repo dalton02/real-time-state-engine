@@ -10,7 +10,10 @@ defmodule App.Telemetry do
   end
 
   def get_node(machine_identifier) do
-    Repo.get_by(Node, machine_identifier: machine_identifier)
+    case Repo.get_by(Node, machine_identifier: machine_identifier) do
+      nil -> {:error, :not_found}
+      node -> {:ok, node}
+    end
   end
 
   def list_nodes() do
