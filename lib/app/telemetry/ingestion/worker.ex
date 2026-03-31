@@ -12,15 +12,19 @@ defmodule App.Telemetry.Ingestion.Worker do
     GenServer.start_link(__MODULE__, :ok, name: :telemetry_worker)
   end
 
+  @doc false
   def schedule_sweep do
     if Mix.env() != :test do
       Process.send_after(self(), :sweep, 5000)
     end
   end
 
-  def do_sweep() do
+  @doc """
+  Reads all records from the ETS cache and persists each one to SQLite
+  via `App.Telemetry.persist_node_metrics/1`.
+  """
+  def do_sweep do
     list = :ets.tab2list(:w_core_telemetry_cache)
-    IO.puts("Sweeping")
 
     Enum.each(list, fn {node_id, status, event_count, last_payload, timestamp} ->
       App.Telemetry.persist_node_metrics({node_id, status, event_count, last_payload, timestamp})

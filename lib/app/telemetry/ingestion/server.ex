@@ -1,29 +1,6 @@
 defmodule App.Telemetry.Ingestion.Server do
   use GenServer
 
-  # Client
-  def start_link(_args) do
-    IO.puts("Starting Telemetry Ingestion")
-    GenServer.start_link(__MODULE__, :ok, name: :telemetry_server)
-  end
-
-  def list() do
-    GenServer.call(:telemetry_server, :list)
-  end
-
-  def clear() do
-    GenServer.call(:telemetry_server, :clear)
-  end
-
-  def get_node(id) do
-    GenServer.call(:telemetry_server, {:get_node, id})
-  end
-
-  def add_metric(metric) do
-    GenServer.cast(:telemetry_server, {:add_metric, metric})
-  end
-
-  # Server (callbacks)
   @impl true
   def init(:ok) do
     table =
@@ -33,6 +10,31 @@ defmodule App.Telemetry.Ingestion.Server do
       )
 
     {:ok, table}
+  end
+
+  def start_link(_args) do
+    IO.puts("Starting Telemetry Ingestion")
+    GenServer.start_link(__MODULE__, :ok, name: :telemetry_server)
+  end
+
+  @doc "Returns all records currently in the ETS cache."
+  def list() do
+    GenServer.call(:telemetry_server, :list)
+  end
+
+  def clear() do
+    GenServer.call(:telemetry_server, :clear)
+  end
+
+  @doc "Returns a specific node record by id."
+  def get_node(id) do
+    GenServer.call(:telemetry_server, {:get_node, id})
+  end
+
+  @doc "Adds a metric event to the ETS cache. Fire-and-forget."
+
+  def add_metric(metric) do
+    GenServer.cast(:telemetry_server, {:add_metric, metric})
   end
 
   @impl true
