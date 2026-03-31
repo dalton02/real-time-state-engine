@@ -1,6 +1,11 @@
 defmodule App.Telemetry.Ingestion.Server do
   use GenServer
 
+  @pos_status 2
+  @pos_counter 3
+  @pos_payload 4
+  @pos_timestamp 5
+
   @impl true
   def init(:ok) do
     table =
@@ -62,14 +67,14 @@ defmodule App.Telemetry.Ingestion.Server do
     :ets.update_counter(
       :w_core_telemetry_cache,
       metrics.node_id,
-      {3, 1},
+      {@pos_counter, 1},
       {metrics.node_id, metrics.status, 0, metrics.last_payload, metrics.timestamp}
     )
 
     :ets.update_element(:w_core_telemetry_cache, metrics.node_id, [
-      {2, metrics.status},
-      {4, metrics.last_payload},
-      {5, metrics.timestamp}
+      {@pos_status, metrics.status},
+      {@pos_payload, metrics.last_payload},
+      {@pos_timestamp, metrics.timestamp}
     ])
 
     {:noreply, state}
