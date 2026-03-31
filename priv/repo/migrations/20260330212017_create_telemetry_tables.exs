@@ -5,6 +5,7 @@ defmodule App.Repo.Migrations.CreateTelemetryTables do
     create table(:nodes) do
       add :machine_identifier, :string, null: false
       add :location, :string, null: false
+      timestamps()
     end
 
     create unique_index(:nodes, [:machine_identifier])
@@ -15,6 +16,7 @@ defmodule App.Repo.Migrations.CreateTelemetryTables do
       add :total_events_processed, :integer, default: 0
       add :last_payload, :map
       add :last_seen_at, :utc_datetime_usec
+      timestamps()
     end
 
     create unique_index(:node_metrics, [:node_id])
