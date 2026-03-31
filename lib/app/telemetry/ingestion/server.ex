@@ -14,6 +14,17 @@ defmodule App.Telemetry.Ingestion.Server do
         [:set, :protected, :named_table, read_concurrency: true]
       )
 
+    App.Telemetry.list_node_metrics()
+    |> Enum.each(fn metrics ->
+      :ets.insert(:w_core_telemetry_cache, {
+        metrics.node_id,
+        metrics.status,
+        metrics.total_events_processed,
+        metrics.last_payload,
+        metrics.last_seen_at
+      })
+    end)
+
     {:ok, table}
   end
 

@@ -8,6 +8,7 @@ defmodule App.Telemetry.NodeMetrics do
     field :total_events_processed, :integer
     field :last_payload, :map
     field :last_seen_at, :utc_datetime_usec
+    timestamps()
   end
 
   def changeset(node_metrics, params \\ %{}) do

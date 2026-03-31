@@ -24,6 +24,11 @@ defmodule App.Telemetry do
     Repo.all(Node)
   end
 
+  @doc "Return all node metrics in DB"
+  def list_node_metrics() do
+    Repo.all(NodeMetrics)
+  end
+
   @doc "Ingests an event into the real-time cache asynchronously."
   def ingest_event(params) do
     Server.add_metric(params)

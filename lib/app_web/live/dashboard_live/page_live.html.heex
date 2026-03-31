@@ -1,8 +1,61 @@
-<div>
-  <h1>Dashboard</h1>
+<style>
+</style>
 
-  <AppWeb.CardNode.show/>
-  <button phx-click="teste">
-  {@user}
-  </button>
+<div class="mb-8 px-6 py-4 flex items-end justify-between border-b border-[#1e2530]">
+  <div class="">
+    <p class="text-[10px] tracking-[0.2em] uppercase text-orange-500 mb-1">
+      W-CORE · REAL-TIME MONITOR
+    </p>
+    <h1 class="text-2xl font-medium text-[#e8edf2] tracking-tight">
+      Node Dashboard
+    </h1>
+    <p class="mt-1 text-[11px] text-[#5a6a7a]">
+      {length(@nodes)} nodes registered · last sweep
+      <span class="text-[#8a9aaa]">{@last_sweep}</span>
+    </p>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <div class="flex items-center gap-1.5  text-[11px] text-[#5a6a7a]">
+      <span class="w-2 h-2 rounded-full bg-green-500"></span>
+      {Enum.count(@nodes, fn {_, status, _, _, _} -> status == "operational" end)} online
+    </div>
+    <div class="flex items-center gap-1.5  text-[11px] text-[#5a6a7a]">
+      <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+      {Enum.count(@nodes, fn {_, status, _, _, _} -> status == "warning" end)} warning
+    </div>
+    <div class="flex items-center gap-1.5  text-[11px] text-[#5a6a7a]">
+      <span class="w-2 h-2 rounded-full bg-red-500"></span>
+      {Enum.count(@nodes, fn {_, status, _, _, _} -> status == "critical" end)} critical
+    </div>
+  </div>
 </div>
+
+<%= if Enum.empty?(@nodes) do %>
+  <div class="flex flex-col items-center justify-center py-24 text-center">
+    <div class="w-12 h-12 border border-[#263040] flex items-center justify-center mb-4">
+      <svg viewBox="0 0 16 16" class="w-5 h-5 fill-[#5a6a7a]" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M8 1L15 5V11L8 15L1 11V5L8 1Z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        />
+      </svg>
+    </div>
+    <p class=" text-[11px] text-[#5a6a7a] tracking-[0.1em] uppercase">
+      No nodes registered
+    </p>
+    <p class="mt-1  text-[10px] text-[#3a4a5a]">
+      Waiting for sensor registration...
+    </p>
+  </div>
+<% else %>
+  <div class="grid p-6 pt-0 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <%= for node <- @nodes do %>
+      <% # Destructure the tuple to get the node_id
+      {node_id, _status, _event_count, _last_payload, _last_seen_at} = node %>
+      <.live_component module={AppWeb.CardNode} id={"node-#{node_id}"} node={node} />
+    <% end %>
+  </div>
+<% end %>
