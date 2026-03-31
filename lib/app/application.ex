@@ -15,7 +15,8 @@ defmodule App.Application do
       # Start a worker by calling: App.Worker.start_link(arg)
       # {App.Worker, arg},
       # Start to serve requests, typically the last entry
-      AppWeb.Endpoint
+      AppWeb.Endpoint,
+      App.Telemetry.Ingestion.Supervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

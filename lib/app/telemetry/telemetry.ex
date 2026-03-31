@@ -1,6 +1,8 @@
 defmodule App.Telemetry do
   alias App.Telemetry.Node
   alias App.Telemetry.NodeMetrics
+
+  alias App.Telemetry.Ingestion.Server
   alias App.Repo
 
   def register_node(params) do
@@ -15,12 +17,29 @@ defmodule App.Telemetry do
     Repo.all(Node)
   end
 
-  def upsert_node_metrics(params) do
-    %NodeMetrics{}
-    |> NodeMetrics.changeset(params)
-    |> Repo.insert(
-      on_conflict: :replace_all,
-      conflict_target: :node_id
+  def ingest_event(params) do
+    Server.add_metric(params)
+  end
+
+  def persist_node_metrics({node_id, status, event_count, last_payload, timestamp}) do
+    changeset =
+      NodeMetrics.changeset(%NodeMetrics{}, %{
+        node_id: node_id,
+        status: status,
+        total_events_processed: event_count,
+        last_payload: last_payload,
+        last_seen_at: timestamp
+      })
+
+    Repo.insert(changeset,
+      on_conflict: [
+        set: [
+          status: status,
+          total_events_processed: event_count,
+          last_payload: last_payload,
+          last_seen_at: timestamp
+        ]
+      ]
     )
   end
 end
