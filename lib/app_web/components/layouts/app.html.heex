@@ -1,0 +1,144 @@
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+
+    <.live_title suffix=" · W-Core">
+      {assigns[:page_title] || "W-Core"}
+    </.live_title>
+
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
+    </script>
+
+    <%!-- Google Fonts: IBM Plex --%>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-deep:      #0a0c0f;
+        --bg-panel:     #0f1217;
+        --bg-card:      #151920;
+        --border:       #1e2530;
+        --border-light: #263040;
+        --accent:       #f97316;
+        --accent-dim:   #7c3a12;
+        --text-primary: #e8edf2;
+        --text-muted:   #5a6a7a;
+        --text-dim:     #8a9aaa;
+        --green:        #22c55e;
+        --red:          #ef4444;
+      }
+
+      body { font-family: 'IBM Plex Sans', sans-serif; }
+
+      .bg-grid::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(249,115,22,0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(249,115,22,0.015) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .px-8{
+        padding: 0px 16px 0px 16px;
+      }
+      .bg-grid::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.5;
+      }
+
+      @keyframes pulse-green {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.4; }
+      }
+      .animate-pulse-green { animation: pulse-green 2s ease-in-out infinite; }
+
+      @keyframes slide-in {
+        from { transform: translateX(20px); opacity: 0; }
+        to   { transform: translateX(0);    opacity: 1; }
+      }
+      .animate-slide-in { animation: slide-in 0.2s ease; }
+    </style>
+  </head>
+
+  <body class="h-full bg-[#0a0c0f] text-[#e8edf2] text-sm leading-relaxed bg-grid">
+    <div class="relative z-10 min-h-screen flex flex-col">
+      <header class="flex items-center justify-between px-8 h-14 border-b border-[#1e2530] bg-[#0f1217] sticky top-0 z-50">
+        <a href="/" class="flex items-center gap-2.5 no-underline">
+          <div class="w-7 h-7 border border-orange-500 flex items-center justify-center">
+            <svg
+              viewBox="0 0 16 16"
+              class="w-3.5 h-3.5 fill-orange-500"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M8 1L15 5V11L8 15L1 11V5L8 1Z" />
+            </svg>
+          </div>
+          <span class="font-['IBM_Plex_Mono'] text-[13px] font-semibold text-[#e8edf2] tracking-[0.12em] uppercase">
+            W<span class="text-orange-500">-</span>Core
+          </span>
+        </a>
+
+        <div class="flex items-center">
+          <div class="flex items-center gap-3 font-['IBM_Plex_Mono'] text-[11px] text-[#5a6a7a] tracking-[0.05em]">
+            <div class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_6px_#22c55e] animate-pulse-green">
+            </div>
+            SYSTEM OPERATIONAL
+          </div>
+          <div class="w-px h-5 bg-[#263040] "></div>
+          <div class="font-['IBM_Plex_Mono'] text-[11px] text-[#5a6a7a] tracking-[0.05em]">
+            PLANT 42
+          </div>
+        </div>
+      </header>
+
+      <div class="fixed top-[72px] right-6 z-[100] flex flex-col gap-2">
+        <%= if info = Phoenix.Flash.get(@flash, :info) do %>
+          <div class="flex items-start gap-2.5 px-4 py-3 border-l-[3px] border-orange-500 bg-[#151920] font-['IBM_Plex_Mono'] text-[12px] text-[#8a9aaa] max-w-xs animate-slide-in">
+            <span>ℹ</span>
+            <span>{info}</span>
+          </div>
+        <% end %>
+        <%= if error = Phoenix.Flash.get(@flash, :error) do %>
+          <div class="flex items-start gap-2.5 px-4 py-3 border-l-[3px] border-red-500 bg-[#151920] font-['IBM_Plex_Mono'] text-[12px] text-red-500 max-w-xs animate-slide-in">
+            <span>✕</span>
+            <span>{error}</span>
+          </div>
+        <% end %>
+      </div>
+
+      <main class="flex-1 flex items-center justify-center px-4 py-12">
+        {render_slot(@inner_block)}
+      </main>
+
+      <footer class="flex items-center justify-between px-8 h-10 border-t border-[#1e2530] bg-[#0f1217]">
+        <span class="font-['IBM_Plex_Mono'] text-[10px] text-[#5a6a7a] tracking-[0.08em]">
+          NODE_ID: <span class="text-orange-500">PLT-42-CTRL</span>
+        </span>
+        <div class="flex gap-4">
+          <span class="flex items-center gap-1 font-['IBM_Plex_Mono'] text-[10px] text-[#5a6a7a] tracking-[0.08em]">
+            <span class="w-[5px] h-[5px] rounded-full bg-green-500"></span> ETS ONLINE
+          </span>
+          <span class="flex items-center gap-1 font-['IBM_Plex_Mono'] text-[10px] text-[#5a6a7a] tracking-[0.08em]">
+            <span class="w-[5px] h-[5px] rounded-full bg-green-500"></span> SQLITE SYNC
+          </span>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
