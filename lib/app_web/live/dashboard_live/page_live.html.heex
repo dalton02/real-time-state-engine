@@ -1,8 +1,32 @@
-<div>
-  <h1>Dashboard</h1>
+<style>
+</style>
 
-  <AppWeb.CardNode.show/>
-  <button phx-click="teste">
-  {@user}
-  </button>
-</div>
+<Dashboard.header nodes={@nodes} />
+<%= if Enum.empty?(@nodes) do %>
+  <div class="flex flex-col items-center justify-center py-24 text-center">
+    <div class="w-12 h-12 border border-[#263040] flex items-center justify-center mb-4">
+      <svg viewBox="0 0 16 16" class="w-5 h-5 fill-[#5a6a7a]" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M8 1L15 5V11L8 15L1 11V5L8 1Z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        />
+      </svg>
+    </div>
+    <p class=" text-[11px] text-[#5a6a7a] tracking-[0.1em] uppercase">
+      No nodes registered
+    </p>
+    <p class="mt-1  text-[10px] text-[#3a4a5a]">
+      Waiting for sensor registration...
+    </p>
+  </div>
+<% else %>
+  <div class="grid p-6 pt-0 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <%= for node <- @nodes do %>
+      <% # Destructure the tuple to get the node_id
+      {node_id, _status, _event_count, _last_payload, _last_seen_at} = node %>
+      <.live_component module={AppWeb.CardNode} id={"node-#{node_id}"} node={node} />
+    <% end %>
+  </div>
+<% end %>

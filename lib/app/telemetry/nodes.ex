@@ -6,6 +6,7 @@ defmodule App.Telemetry.Node do
     field :machine_identifier, :string
     field :location, :string
     has_one :node_metrics, App.Telemetry.NodeMetrics, foreign_key: :node_id
+    timestamps()
   end
 
   def changeset(node, params \\ %{}) do

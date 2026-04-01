@@ -1,17 +1,26 @@
-
 defmodule AppWeb.DashboardLive.PageLive do
+  alias App.Telemetry
+  alias AppWeb.Components.Dashboard
   use AppWeb, :live_view
 
-  alias App.Telemetry
+  @topic "telemetry:updates"
 
   def mount(_params, _session, socket) do
-    user = socket.assigns.current_scope.user
-    nodes = Telemetry.list_nodes()
+    Phoenix.PubSub.subscribe(App.PubSub, @topic)
+    nodes = Telemetry.get_hot_data()
 
-    {:ok, socket |> assign(nodes: nodes,user: user.email)}
+    {:ok,
+     assign(socket,
+       nodes: nodes
+     )}
   end
 
-  def handle_event("teste",_params,socket) do
-    { :noreply, socket |> assign(nodes: socket.assigns.nodes,user: "mudou") }
+  def handle_info({:nodes_updated, _node_id}, socket) do
+    nodes = Telemetry.get_hot_data()
+
+    {:noreply,
+     assign(socket,
+       nodes: nodes
+     )}
   end
 end

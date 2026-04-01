@@ -37,8 +37,7 @@ defmodule App.Telemetry.IngestionTest do
       data = Server.get_node(1)
 
       assert {1, @metric_example.status, 1, @metric_example.last_payload,
-              @metric_example.timestamp} ==
-               Enum.at(data, 0)
+              @metric_example.timestamp} == elem(data, 1)
     end
 
     test "correctly update event_count field" do
@@ -51,8 +50,7 @@ defmodule App.Telemetry.IngestionTest do
       data = Server.get_node(1)
 
       assert {1, @metric_example.status, total, @metric_example.last_payload,
-              @metric_example.timestamp} ==
-               Enum.at(data, 0)
+              @metric_example.timestamp} == elem(data, 1)
     end
   end
 

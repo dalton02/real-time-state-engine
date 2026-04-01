@@ -1,0 +1,39 @@
+<div class="w-screen h-svh flex justify-center items-center flex-col">
+  <div class="mb-8">
+    <h1 class="text-2xl font-medium text-[#e8edf2] tracking-tight">
+      Register New Node
+    </h1>
+    <p class="mt-1  text-[11px] text-[#5a6a7a]">
+      Add a new sensor to the Plant 42 monitoring network.
+    </p>
+  </div>
+
+  <div>
+    <div class="bg-[#0f1217] border border-t-0 border-[#263040] p-6">
+      <.form for={@form} id="node_form" phx-submit="save" phx-change="validate">
+        <InputsDS.input
+          field={@form[:machine_identifier]}
+          label="Machine Identifier"
+          placeholder="e.g. AA-01"
+        />
+
+        <InputsDS.input
+          field={@form[:location]}
+          label="Location"
+          placeholder="e.g. Sector A - Turbine Hall"
+        />
+
+        <div class="h-px bg-[#1e2530] mb-6"></div>
+
+        <div class="flex items-center justify-between gap-8">
+          <ButtonsDS.go_back url={~p"/"} label="← Back to metrics" />
+          <ButtonsDS.submit disable_with="Registering..." label="Register Node" />
+        </div>
+      </.form>
+    </div>
+
+    <div class="flex justify-end">
+      <div class="w-8 h-8 border-b-2 border-r-2 border-[#263040]"></div>
+    </div>
+  </div>
+</div>

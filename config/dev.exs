@@ -2,7 +2,7 @@ import Config
 
 config :app, ecto_repos: [App.Repo]
 
-config :app, App.Repo, database: "dev.db"
+config :app, App.Repo, database: "dev.db", log: false
 
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it

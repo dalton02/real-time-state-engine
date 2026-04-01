@@ -8,6 +8,7 @@ defmodule App.Telemetry.NodeMetrics do
     field :total_events_processed, :integer
     field :last_payload, :map
     field :last_seen_at, :utc_datetime_usec
+    timestamps()
   end
 
   def changeset(node_metrics, params \\ %{}) do
@@ -15,5 +16,11 @@ defmodule App.Telemetry.NodeMetrics do
     |> cast(params, [:node_id, :status, :total_events_processed, :last_payload, :last_seen_at])
     |> validate_required([:node_id, :status])
     |> unique_constraint(:node_id)
+  end
+
+  def form(node_metrics, params \\ %{}) do
+    node_metrics
+    |> cast(params, [:status, :last_payload])
+    |> validate_required([:status, :last_payload])
   end
 end

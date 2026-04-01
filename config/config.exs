@@ -20,6 +20,10 @@ config :app, :scopes,
     test_setup_helper: :register_and_log_in_user
   ]
 
+config :app, App.PubSub,
+  adapter: Phoenix.PubSub.PG2,
+  pool_size: 1
+
 config :app,
   ecto_repos: [App.Repo],
   generators: [timestamp_type: :utc_datetime]
