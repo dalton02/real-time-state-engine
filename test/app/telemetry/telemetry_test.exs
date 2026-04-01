@@ -42,14 +42,19 @@ defmodule App.TelemetryTest do
 
   describe "get node" do
     test "returns node when found" do
-      {:ok, _} = Telemetry.register_node(%{machine_identifier: "AA-01", location: "Setor A"})
+      Telemetry.register_node(%{machine_identifier: "AA-01", location: "Setor A"})
 
-      assert node = Telemetry.get_node("AA-01")
-      assert node.machine_identifier == "AA-01"
+      case Telemetry.get_node(1) do
+        {:error, _} -> flunk("node not found")
+        {:ok, node} -> assert node.machine_identifier == "AA-01"
+      end
     end
 
     test "returns nil when not found" do
-      assert Telemetry.get_node("inexistente") == nil
+      case Telemetry.get_node(-1) do
+        {:error, _} -> assert true
+        {:ok, _} -> flunk("How is this possible?")
+      end
     end
   end
 end

@@ -9,7 +9,7 @@
   </div>
 
   <div>
-    <div class="bg-[#0f1217] border border-t-0 border-[#263040] p-6">
+    <div class="bg-[#0f1217] border  border-[#263040] p-6">
       <.form for={@form} id="node_form" phx-submit="save" phx-change="validate">
         <InputsDS.input
           field={@form[:machine_identifier]}
@@ -30,10 +30,6 @@
           <ButtonsDS.submit disable_with="Registering..." label="Register Node" />
         </div>
       </.form>
-    </div>
-
-    <div class="flex justify-end">
-      <div class="w-8 h-8 border-b-2 border-r-2 border-[#263040]"></div>
     </div>
   </div>
 </div>

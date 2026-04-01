@@ -1,5 +1,5 @@
 defmodule AppWeb.UserLive.SettingsTest do
-  use AppWeb.ConnCase
+  use AppWeb.ConnCase, async: true
 
   alias App.Accounts
   import Phoenix.LiveViewTest

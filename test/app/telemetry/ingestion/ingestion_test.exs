@@ -76,4 +76,61 @@ defmodule App.Telemetry.IngestionTest do
                 ), nodeDB.last_seen_at}
     end
   end
+
+  describe "ETS concurrency stress" do
+    setup do
+      Telemetry.register_node(%{machine_identifier: "1", location: "Sector B"})
+      Telemetry.register_node(%{machine_identifier: "2", location: "Sector B"})
+      Telemetry.register_node(%{machine_identifier: "3", location: "Sector B"})
+      Telemetry.register_node(%{machine_identifier: "4", location: "Sector B"})
+      Telemetry.register_node(%{machine_identifier: "5", location: "Sector B"})
+
+      Server.clear()
+      {:ok, recipient: :world}
+    end
+
+    test "10.000 workers" do
+      total = 10000
+
+      tasks =
+        Enum.to_list(1..total)
+        |> Enum.map(fn _ ->
+          Task.async(fn ->
+            node_id = Enum.random([1, 2, 3, 4, 5])
+
+            Server.add_metric(%{
+              node_id: node_id,
+              status: "operational",
+              last_payload: %{
+                thermal_power_mw: 3415.6,
+                electrical_power_mw: 1250.3,
+                power_output_percent: 98.7,
+                neutron_flux_percent: 94.2
+              },
+              timestamp: DateTime.utc_now()
+            })
+          end)
+        end)
+
+      Task.await_many(tasks, :infinity)
+
+      count =
+        Server.list()
+        |> Enum.reduce(0, fn item, acc ->
+          elem(item, 2) + acc
+        end)
+
+      assert total == count
+
+      Worker.do_sweep()
+
+      count =
+        Telemetry.list_node_and_metrics()
+        |> Enum.reduce(0, fn item, acc ->
+          item.node_metrics.total_events_processed + acc
+        end)
+
+      assert total == count
+    end
+  end
 end

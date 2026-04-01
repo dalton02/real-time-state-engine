@@ -11,7 +11,8 @@ defmodule AppWeb.DashboardLive.PageLive do
 
     {:ok,
      assign(socket,
-       nodes: nodes
+       nodes: nodes,
+       page_title: "Dashboard"
      )}
   end
 

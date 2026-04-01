@@ -7,7 +7,7 @@ defmodule AppWeb.NodeLive.New do
 
   def mount(_params, _session, socket) do
     form = to_form(Node.changeset(%Node{}, %{}))
-    {:ok, assign(socket, form: form)}
+    {:ok, assign(socket, form: form, page_title: "Create Node")}
   end
 
   def handle_event("validate", %{"node" => params}, socket) do

@@ -6,11 +6,11 @@ defmodule AppWeb.CardNode do
   end
 
   def render(assigns) do
-    {node_id, status, event_count, last_payload, last_seen_at} = assigns.node
-
     ~H"""
     <div class="relative bg-[#0d1117] border border-[#21262d] rounded-xl overflow-hidden
                 hover:border-[#30363d] transition-all duration-200 group">
+      <% {node_id, status, event_count, last_payload, last_seen_at} = @node %>
+
       <% {accent, badge_bg, badge_border, dot_color, dot_glow, text_color, label} =
         case status do
           "operational" ->
