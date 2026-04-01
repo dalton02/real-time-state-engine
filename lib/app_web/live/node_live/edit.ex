@@ -54,7 +54,7 @@ defmodule AppWeb.NodeLive.Edit do
           )
 
         IO.inspect(form)
-        {:ok, assign(socket, node_id: data.id, form: form)}
+        {:ok, assign(socket, node_id: data.id, form: form, page_title: "Edit Node Metrics")}
     end
   end
 

@@ -37,21 +37,29 @@
 
 
 :root {
-        --bg-deep:      #0a0c0f;
-        --bg-panel:     #0f1217;
-        --bg-card:      #151920;
-        --border:       #1e2530;
-        --border-light: #263040;
-        --accent:       #f97316;
-        --accent-dim:   #7c3a12;
-        --text-primary: #e8edf2;
-        --text-muted:   #5a6a7a;
-        --text-dim:     #8a9aaa;
-        --green:        #22c55e;
-        --red:          #ef4444;
+ /* Primary Background Colors */
+  --bg-primary: #0d1117;        /* Main background - card background */
+  --bg-secondary: #080b0f;      /* Secondary background - payload section */
+  --bg-tertiary: #161b22;       /* Alternative dark background */
+  
+  /* Border Colors */
+  --border-default: #21262d;    /* Default border - card border */
+  --border-muted: #30363d;      /* Hover border - card hover state */
+  --border-subtle: #1c2128;     /* Subtle border - payload border */
+  
+  /* Text Colors */
+  --text-primary: #e6edf3;      /* Primary text - node ID, event count */
+  --text-secondary: #8b949e;     /* Secondary text - last seen time */
+  --text-muted: #6e7681;        /* Muted text - labels, keys */
+  --text-tertiary: #3d444d;     /* Tertiary text - disabled/dimmed */
+  
+  /* Status Colors */
+  --status-operational: #10b981;    /* Emerald-500 - operational dot */
+  --status-warning: #fbbf24;        /* Amber-400 - warning dot */
+  --status-critical: #ef4444;       /* Red-500 - critical dot */
+  --status-unknown: #6b7280;        /* Zinc-500 - unknown dot */
+
 }
-
-
 /* daisyUI theme plugin. You can update this file by fetching the latest version with:
   curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js
   We ship with two themes, a light one inspired on Phoenix colors and a dark one inspired
