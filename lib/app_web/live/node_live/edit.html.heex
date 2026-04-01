@@ -1,0 +1,40 @@
+<div class="w-screen h-svh flex justify-center items-center flex-col bg-[#0a0c0f]">
+  <div class="mb-8 text-center">
+    <h1 class="text-2xl font-medium text-[#e8edf2] tracking-tight">
+      Add New Metric
+    </h1>
+    <p class="mt-1 text-[11px] text-[#5a6a7a]">
+      Register a new metric for monitoring in Plant 42.
+    </p>
+  </div>
+
+  <div class="w-full max-w-md">
+    <div class="bg-[#0f1217] border border-t-0 border-[#263040] p-6">
+      <.form for={@form} id="metric_form" phx-submit="save" phx-change="validate">
+        <InputsDS.select
+          field={@form[:status]}
+          label="Status"
+          options={[
+            %{label: "Operational", value: "operational"},
+            %{label: "Warning", value: "warning"},
+            %{label: "Critical", value: "critical"}
+          ]}
+        />
+        <InputsDS.textarea
+          field={@form[:last_payload]}
+          label="Last Payload (JSON)"
+        />
+        <div class="h-px bg-[#1e2530] mb-6"></div>
+
+        <div class="flex items-center justify-between gap-8">
+          <ButtonsDS.go_back url={~p"/"} label="← Back to metrics" />
+          <ButtonsDS.submit disable_with="Adding Metric..." label="Add metric" />
+        </div>
+      </.form>
+    </div>
+
+    <div class="flex justify-end">
+      <div class="w-8 h-8 border-b-2 border-r-2 border-[#263040]"></div>
+    </div>
+  </div>
+</div>

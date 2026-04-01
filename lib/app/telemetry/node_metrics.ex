@@ -17,4 +17,10 @@ defmodule App.Telemetry.NodeMetrics do
     |> validate_required([:node_id, :status])
     |> unique_constraint(:node_id)
   end
+
+  def form(node_metrics, params \\ %{}) do
+    node_metrics
+    |> cast(params, [:status, :last_payload])
+    |> validate_required([:status, :last_payload])
+  end
 end

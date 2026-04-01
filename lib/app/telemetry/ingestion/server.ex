@@ -14,15 +14,19 @@ defmodule App.Telemetry.Ingestion.Server do
         [:set, :protected, :named_table, read_concurrency: true]
       )
 
-    App.Telemetry.list_node_metrics()
-    |> Enum.each(fn metrics ->
-      :ets.insert(:w_core_telemetry_cache, {
-        metrics.node_id,
-        metrics.status,
-        metrics.total_events_processed,
-        metrics.last_payload,
-        metrics.last_seen_at
-      })
+    App.Telemetry.list_node_and_metrics()
+    |> Enum.each(fn node ->
+      metrics = node.node_metrics
+
+      ets_entry = {
+        node.id,
+        (metrics && metrics.status) || nil,
+        (metrics && metrics.total_events_processed) || 0,
+        (metrics && metrics.last_payload) || %{},
+        (metrics && metrics.last_seen_at) || nil
+      }
+
+      :ets.insert(:w_core_telemetry_cache, ets_entry)
     end)
 
     {:ok, table}
@@ -31,6 +35,11 @@ defmodule App.Telemetry.Ingestion.Server do
   def start_link(_args) do
     IO.puts("Starting Telemetry Ingestion")
     GenServer.start_link(__MODULE__, :ok, name: :telemetry_server)
+  end
+
+  @doc "When a new node is created, the node is placed in the ets table"
+  def new_node(id) do
+    GenServer.cast(:telemetry_server, {:new_node, id})
   end
 
   @doc "Returns all records currently in the ETS cache."
@@ -74,6 +83,21 @@ defmodule App.Telemetry.Ingestion.Server do
   end
 
   @impl true
+  def handle_cast({:new_node, id}, state) do
+    ets_entry = {
+      id,
+      nil,
+      0,
+      %{},
+      nil
+    }
+
+    :ets.insert(:w_core_telemetry_cache, ets_entry)
+    Phoenix.PubSub.broadcast(App.PubSub, "telemetry:updates", {:nodes_updated, id})
+    {:noreply, state}
+  end
+
+  @impl true
   def handle_cast({:add_metric, metrics}, state) do
     :ets.update_counter(
       :w_core_telemetry_cache,
@@ -87,6 +111,8 @@ defmodule App.Telemetry.Ingestion.Server do
       {@pos_payload, metrics.last_payload},
       {@pos_timestamp, metrics.timestamp}
     ])
+
+    Phoenix.PubSub.broadcast(App.PubSub, "telemetry:updates", {:nodes_updated, metrics.node_id})
 
     {:noreply, state}
   end

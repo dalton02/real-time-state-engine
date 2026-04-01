@@ -40,6 +40,8 @@ defmodule AppWeb.Router do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
       live "/", DashboardLive.PageLive
+      live "/nodes/new", NodeLive.New, :new
+      live "/node/:id/edit", NodeLive.Edit, :edit
     end
 
     post "/users/update-password", UserSessionController, :update_password
