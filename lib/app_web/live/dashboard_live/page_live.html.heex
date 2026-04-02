@@ -1,6 +1,7 @@
 <style>
 </style>
 
+<div class="flex flex-col min-h-screen ">
 <Dashboard.header nodes={@nodes} />
 <%= if Enum.empty?(@nodes) do %>
   <div class="flex flex-col items-center justify-center py-24 text-center">
@@ -30,3 +31,4 @@
     <% end %>
   </div>
 <% end %>
+</div>
