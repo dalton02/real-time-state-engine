@@ -14,7 +14,7 @@ defmodule App.Telemetry.Ingestion.Worker do
 
   @doc false
   def schedule_sweep do
-    if Mix.env() != :test do
+    if Application.get_env(:app, :env) != :test do
       Process.send_after(self(), :sweep, 5000)
     end
   end

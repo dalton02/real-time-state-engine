@@ -7,7 +7,7 @@ defmodule AppWeb.UserLive.Login do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
-      <div class="mx-auto max-w-sm flex flex-col gap-3">
+      <div class="mx-auto max-w-sm flex flex-col gap-1">
         <div class="text-center">
           <.header>
             <p>Log in</p>
@@ -41,7 +41,7 @@ defmodule AppWeb.UserLive.Login do
           id="login_form_magic"
           action={~p"/users/log-in"}
           phx-submit="submit_magic"
-          class="flex flex-col gap-3"
+          class="flex flex-col gap-1"
         >
           <.input
             readonly={!!@current_scope}
@@ -66,7 +66,7 @@ defmodule AppWeb.UserLive.Login do
           id="login_form_password"
           action={~p"/users/log-in"}
           phx-submit="submit_password"
-          class="flex flex-col gap-3"
+          class="flex flex-col gap-1"
           phx-trigger-action={@trigger_submit}
         >
           <.input
